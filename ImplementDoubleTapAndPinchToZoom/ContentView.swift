@@ -9,8 +9,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var scale: CGFloat = 1.0
     var body: some View {
-        Text("Hello World")
+        Image("pizza")
+            .resizable()
+            .scaledToFit()
+            .scaleEffect(self.scale)
+            .gesture(MagnificationGesture().onChanged({ (scsle) in
+                self.scale = self.scale.magnitude
+            }).onEnded({ (scaleFinal) in
+                self.scale = scaleFinal.magnitude
+            }))
     }
 }
 
