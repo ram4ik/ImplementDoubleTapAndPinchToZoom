@@ -12,6 +12,8 @@ struct ContentView: View {
     @State var scale: CGFloat = 1.0
     @State var isTapped: Bool = false
     @State var pointTapped: CGPoint = CGPoint.zero
+    @State var draggedWidth: CGSize = CGSize.zero
+    @State var previousDRagged: CGSize = CGSize.zero
     var body: some View {
         GeometryReader { reader in
             Image("pizza")
@@ -24,8 +26,10 @@ struct ContentView: View {
                     self.isTapped = !self.isTapped
                 }).simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .global).onChanged({ (value) in
                     self.pointTapped = value.startLocation
+                    self.draggedWidth = CGSize(width: value.translation.width + self.previousDRagged.width, height: value.translation.height + self.previousDRagged.height)
                 }).onEnded({ (value) in
-                    print(value.location)
+                    self.draggedWidth = CGSize(width: value.translation.width + self.previousDRagged.width, height: value.translation.height + self.previousDRagged.height)
+                    self.previousDRagged = self.draggedWidth
                 })))
                 .gesture(MagnificationGesture().onChanged({ (scsle) in
                     self.scale = self.scale.magnitude
